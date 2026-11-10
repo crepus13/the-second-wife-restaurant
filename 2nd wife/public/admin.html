@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | THE SECOND WIFE FAMILY RESTAURANT</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen text-gray-800 antialiased selection:bg-red-500 selection:text-white">
+
+  <!-- Admin Toast Notifications -->
+  <div id="admin-toast-container"></div>
+
+  <!-- ================= TOP ADMIN NAVBAR ================= -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Left: Brand Logo & Admin Tag -->
+        <div class="flex items-center gap-3">
+          <a href="/admin.html" class="flex items-center gap-2">
+            <span class="text-2xl">👑</span>
+            <div>
+              <span class="admin-brand-name font-black font-serif text-lg text-gray-900">THE SECOND WIFE FAMILY RESTAURANT</span>
+              <span
+                class="ml-2 text-[10px] bg-red-100 text-red-800 font-extrabold uppercase px-2 py-0.5 rounded-full">Admin
+                Portal</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Right: Storefront link, Profile, Logout -->
+        <div class="flex items-center gap-3">
+          <a href="/index.html"
+            class="flex items-center gap-1 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 px-3.5 py-2 rounded-xl transition">
+            <span>🌐</span> View Storefront
+          </a>
+
+          <div class="flex items-center gap-2 pl-2 border-l border-gray-200">
+            <div class="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs">
+              A
+            </div>
+            <span id="admin-profile-name" class="text-xs font-bold text-gray-800 hidden sm:inline">Admin</span>
+          </div>
+
+          <button onclick="fetch('/api/auth/logout', {method:'POST'}).then(() => window.location.href='/index.html')"
+            class="text-xs font-bold text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition"
+            title="Sign Out">
+            🚪 Logout
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- TOP STAT CARDS -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+
+      <!-- Revenue -->
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <span class="text-xs text-gray-500 font-medium">Total Revenue</span>
+        <h4 id="stat-revenue" class="text-xl sm:text-2xl font-black text-emerald-600 mt-1">₹0</h4>
+        <span class="text-[10px] text-gray-400">Delivered & active orders</span>
+      </div>
+
+      <!-- Total Orders -->
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <span class="text-xs text-gray-500 font-medium">Total Orders</span>
+        <h4 id="stat-orders" class="text-xl sm:text-2xl font-black text-gray-900 mt-1">0</h4>
+        <span class="text-[10px] text-gray-400">Lifetime transactions</span>
+      </div>
+
+      <!-- Pending Orders -->
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <span class="text-xs text-gray-500 font-medium">Active In Kitchen</span>
+        <h4 id="stat-pending-orders" class="text-xl sm:text-2xl font-black text-amber-600 mt-1">0</h4>
+        <span class="text-[10px] text-gray-400">Placed / Cooking / On way</span>
+      </div>
+
+      <!-- Total Dishes -->
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+        <span class="text-xs text-gray-500 font-medium">Menu Dishes</span>
+        <h4 id="stat-dishes" class="text-xl sm:text-2xl font-black text-gray-900 mt-1">0</h4>
+        <span class="text-[10px] text-gray-400">Live food catalog</span>
+      </div>
+
+      <!-- Table Reservations -->
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs col-span-2 sm:col-span-1">
+        <span class="text-xs text-gray-500 font-medium">Table Bookings</span>
+        <h4 id="stat-reservations" class="text-xl sm:text-2xl font-black text-blue-600 mt-1">0</h4>
+        <span class="text-[10px] text-gray-400">Guest dining requests</span>
+      </div>
+
+    </div>
+
+    <!-- TABS NAVIGATION BAR -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
+      <button id="nav-tab-menu" onclick="switchTab('menu')"
+        class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-sm bg-red-600 text-white shadow-sm transition">
+        <span>🍲</span> Menu & Price Editor
+      </button>
+      <button id="nav-tab-orders" onclick="switchTab('orders')"
+        class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-semibold text-sm text-gray-600 hover:bg-gray-200 transition">
+        <span>📦</span> Live Orders Feed
+      </button>
+      <button id="nav-tab-coupons" onclick="switchTab('coupons')"
+        class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-semibold text-sm text-gray-600 hover:bg-gray-200 transition">
+        <span>🏷️</span> Discounts & Coupons
+      </button>
+      <button id="nav-tab-reservations" onclick="switchTab('reservations')"
+        class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-semibold text-sm text-gray-600 hover:bg-gray-200 transition">
+        <span>🍽️</span> Table Reservations
+      </button>
+      <button id="nav-tab-settings" onclick="switchTab('settings')"
+        class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-semibold text-sm text-gray-600 hover:bg-gray-200 transition">
+        <span>⚙️</span> Restaurant Settings
+      </button>
+    </div>
+
+    <!-- ================= TAB 1: MENU & PRICE EDITOR ================= -->
+    <section id="tab-section-menu" class="space-y-4">
+
+      <div
+        class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3 flex-1 min-w-[240px]">
+          <input type="text" id="admin-menu-search" oninput="renderMenuTable()"
+            placeholder="Search dishes to edit price/photo..."
+            class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-red-500 font-medium" />
+
+          <select id="admin-menu-cat-filter" onchange="renderMenuTable()"
+            class="text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 font-bold text-gray-700">
+            <option value="all">All Categories</option>
+            <option value="biryani">Biryani & Rice</option>
+            <option value="pizzas">Pizzas & Pastas</option>
+            <option value="burgers">Burgers & Rolls</option>
+            <option value="starters">Starters & Tandoor</option>
+            <option value="curries">Curries</option>
+            <option value="desserts">Desserts</option>
+            <option value="beverages">Beverages</option>
+          </select>
+        </div>
+
+        <button onclick="openAddDishModal()"
+          class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+          <span>+</span> Add New Dish
+        </button>
+      </div>
+
+      <!-- Menu Items Table -->
+      <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr
+                class="bg-gray-50 text-[11px] uppercase font-bold text-gray-500 tracking-wider border-b border-gray-200">
+                <th class="py-3 px-4">Dish Details</th>
+                <th class="py-3 px-4">Selling Price</th>
+                <th class="py-3 px-4">Badges</th>
+                <th class="py-3 px-4">Stock Status</th>
+                <th class="py-3 px-4">Rating</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="menu-items-tbody">
+              <!-- Rendered by admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 2: LIVE ORDERS FEED ================= -->
+    <section id="tab-section-orders" class="space-y-4 hidden">
+      <div
+        class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h3 class="font-bold text-gray-900 text-sm">Real-time Kitchen Orders Pipeline</h3>
+          <p class="text-xs text-gray-500">Update order status as kitchen prepares and valets deliver.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-gray-500 font-semibold">Filter Status:</span>
+          <select id="admin-order-status-filter" onchange="renderOrdersList()"
+            class="bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 font-bold text-gray-800">
+            <option value="all">All Orders</option>
+            <option value="Placed">Placed (New)</option>
+            <option value="Preparing">Preparing in Kitchen</option>
+            <option value="Out for Delivery">Out for Delivery</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="admin-orders-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Rendered by admin.js -->
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: DISCOUNTS & COUPONS ================= -->
+    <section id="tab-section-coupons" class="space-y-6 hidden">
+
+      <!-- Create New Coupon Box -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs">
+        <h3 class="font-extrabold text-gray-900 text-base mb-1">Create Zomato / Swiggy Style Promo Code</h3>
+        <p class="text-xs text-gray-500 mb-4">Set percentage discounts, max limits, or flat deductions to drive customer
+          sales.</p>
+
+        <form onsubmit="handleAddCouponSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Coupon Code *</label>
+            <input type="text" id="coupon-code" required placeholder="e.g. FESTIVE40"
+              class="w-full text-xs font-mono uppercase bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold focus:border-red-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Offer Title *</label>
+            <input type="text" id="coupon-title" required placeholder="e.g. 40% OFF Weekend Special"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:border-red-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Discount Type</label>
+            <select id="coupon-type"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold">
+              <option value="percentage">Percentage Discount (%)</option>
+              <option value="flat">Flat Cash Discount (₹)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Discount Value *</label>
+            <input type="number" id="coupon-value" required placeholder="e.g. 40 for 40% or 100"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold focus:border-red-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Max Discount Cap (₹)</label>
+            <input type="number" id="coupon-max" placeholder="e.g. 120 (0 for unlimited)"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:border-red-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Min Order Amount (₹)</label>
+            <input type="number" id="coupon-min-order" value="199" placeholder="199"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:border-red-500" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Offer Description</label>
+            <input type="text" id="coupon-desc" placeholder="Get 40% discount up to ₹120 on meals"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:border-red-500" />
+          </div>
+          <div class="sm:col-span-2 lg:col-span-4 flex justify-end">
+            <button type="submit"
+              class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-sm transition">
+              Create Promo Code 🏷️
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Coupons Table -->
+      <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="bg-gray-50 text-[11px] uppercase font-bold text-gray-500 tracking-wider border-b border-gray-200">
+              <th class="py-3 px-4">Code</th>
+              <th class="py-3 px-4">Offer Title</th>
+              <th class="py-3 px-4">Deduction Rule</th>
+              <th class="py-3 px-4">Min Spend</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-right">Delete</th>
+            </tr>
+          </thead>
+          <tbody id="coupons-tbody">
+            <!-- Rendered by admin.js -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 4: TABLE RESERVATIONS ================= -->
+    <section id="tab-section-reservations" class="space-y-4 hidden">
+      <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-gray-900 text-sm">Table Booking Requests</h3>
+          <p class="text-xs text-gray-500">Manage incoming dining reservations, party sizes & seating preferences.</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr
+              class="bg-gray-50 text-[11px] uppercase font-bold text-gray-500 tracking-wider border-b border-gray-200">
+              <th class="py-3 px-4">Guest Information</th>
+              <th class="py-3 px-4">Date & Time</th>
+              <th class="py-3 px-4">Party Size</th>
+              <th class="py-3 px-4">Seating</th>
+              <th class="py-3 px-4">Special Requests</th>
+              <th class="py-3 px-4">Status Action</th>
+            </tr>
+          </thead>
+          <tbody id="reservations-tbody">
+            <!-- Rendered by admin.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: RESTAURANT SETTINGS & BRANDING ================= -->
+    <section id="tab-section-settings" class="space-y-4 hidden">
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-xs max-w-3xl">
+        <div class="mb-6">
+          <h3 class="font-black font-serif text-xl text-gray-900 mb-1">Restaurant Profile & Delivery Settings</h3>
+          <p class="text-xs text-gray-500">
+            You can change the restaurant name from <b>"XYZ"</b> to your desired official restaurant brand name right
+            here at any time.
+          </p>
+        </div>
+
+        <form onsubmit="handleSaveSettings(event)" class="space-y-4">
+
+          <div class="p-4 bg-red-50 border border-red-200 rounded-2xl mb-4">
+            <label class="block text-xs font-extrabold text-red-900 mb-1">Official Restaurant Name *</label>
+            <input type="text" id="setting-name" required value="THE SECOND WIFE FAMILY RESTAURANT"
+              class="w-full text-sm font-bold bg-white border border-red-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-red-500" />
+            <p class="text-[11px] text-red-700 mt-1">This updates the header, page title, receipts, and order tracking
+              across the entire website.</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Tagline / Motto</label>
+            <input type="text" id="setting-tagline" placeholder="Gourmet Bites, Craveable Delights & Swift Delivery"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:border-red-500" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Customer Helpline Phone *</label>
+              <input type="text" id="setting-phone" required placeholder="+91 98765 43210"
+                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:border-red-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Support Email</label>
+              <input type="email" id="setting-email" placeholder="support@xyzrestaurant.com"
+                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:border-red-500" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Physical Restaurant Address</label>
+            <input type="text" id="setting-address" placeholder="42 Gourmet Boulevard, Food District, City"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:border-red-500" />
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Standard Delivery (₹)</label>
+              <input type="number" id="setting-delivery-fee" value="40"
+                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Free Delivery Over (₹)</label>
+              <input type="number" id="setting-free-delivery" value="499"
+                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">GST Tax Rate (%)</label>
+              <input type="number" step="0.1" id="setting-tax-rate" value="5.0"
+                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Packaging Fee (₹)</label>
+              <input type="number" id="setting-packaging" value="25"
+                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold" />
+            </div>
+          </div>
+
+          <div class="pt-4 flex justify-end">
+            <button type="submit"
+              class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-7 py-3 rounded-xl shadow-md transition">
+              Save Restaurant Settings 💾
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= IN-PLACE EDIT DISH MODAL (PRICE & PHOTO) ================= -->
+  <div id="edit-dish-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeEditDishModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl">✏️</div>
+        <div>
+          <h3 class="text-xl font-black font-serif text-gray-900">Edit Price & Picture</h3>
+          <p class="text-xs text-gray-500">Live updates reflect immediately in the customer storefront.</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleEditDishSubmit(event)" class="space-y-4">
+        <input type="hidden" id="edit-dish-id" />
+
+        <!-- Live Photo Preview -->
+        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl border border-gray-200">
+          <img id="edit-image-preview" src="" alt="Dish Preview"
+            class="w-20 h-20 rounded-xl object-cover border border-gray-300 flex-shrink-0" />
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Food Image URL *</label>
+            <input type="url" id="edit-dish-image" required
+              oninput="updateImagePreview('edit-dish-image', 'edit-image-preview')"
+              placeholder="https://images.unsplash.com/..."
+              class="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2 font-mono text-gray-600 focus:outline-none focus:border-blue-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Dish Name *</label>
+          <input type="text" id="edit-dish-name" required
+            class="w-full text-xs font-bold bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:border-blue-500" />
+        </div>
+
+        <!-- Half & Full Size Settings -->
+        <div class="p-3 bg-red-50/60 border border-red-200 rounded-2xl">
+          <label class="inline-flex items-center gap-2 cursor-pointer mb-2">
+            <input type="checkbox" id="edit-dish-has-hf" onchange="toggleEditHalfFullFields()" class="rounded text-red-600 focus:ring-red-500 w-4 h-4">
+            <span class="text-xs font-bold text-red-900">Has Half & Full Plate Sizes</span>
+          </label>
+          <div id="edit-dish-hf-fields" class="grid grid-cols-2 gap-3 hidden">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Half Plate Price (₹) *</label>
+              <input type="number" step="0.5" id="edit-dish-half-price" class="w-full text-xs font-bold bg-white border border-gray-200 rounded-xl px-3 py-2" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Full Plate Price (₹) *</label>
+              <input type="number" step="0.5" id="edit-dish-full-price" class="w-full text-xs font-bold bg-white border border-gray-200 rounded-xl px-3 py-2" />
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div id="edit-single-price-box">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Standard Price (₹) *</label>
+            <input type="number" step="0.5" id="edit-dish-price" required
+              class="w-full text-sm font-extrabold text-emerald-700 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 focus:border-blue-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Original Price (Strikethrough ₹)</label>
+            <input type="number" step="0.5" id="edit-dish-orig-price"
+              class="w-full text-sm font-extrabold text-gray-500 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 focus:border-blue-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Category</label>
+          <select id="edit-dish-category"
+            class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Description</label>
+          <textarea id="edit-dish-desc" rows="2"
+            class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:border-blue-500"></textarea>
+        </div>
+
+        <!-- Toggles -->
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="edit-dish-veg" class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+            <span class="text-xs font-bold text-gray-700">Vegetarian (Veg)</span>
+          </label>
+
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="edit-dish-bestseller"
+              class="rounded text-amber-600 focus:ring-amber-500 w-4 h-4">
+            <span class="text-xs font-bold text-gray-700">Bestseller Badge</span>
+          </label>
+
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="edit-dish-available" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
+            <span class="text-xs font-bold text-gray-700">In Stock (Available)</span>
+          </label>
+        </div>
+
+        <div class="pt-4 flex justify-end gap-2">
+          <button type="button" onclick="closeEditDishModal()"
+            class="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100">
+            Cancel
+          </button>
+          <button type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-md transition">
+            Save Changes 💾
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ADD NEW DISH MODAL ================= -->
+  <div id="add-dish-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeAddDishModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-xl font-bold">+
+        </div>
+        <div>
+          <h3 class="text-xl font-black font-serif text-gray-900">Add New Dish to Menu</h3>
+          <p class="text-xs text-gray-500">Add food photos, pricing, and category.</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleAddDishSubmit(event)" class="space-y-4">
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Dish Name *</label>
+          <input type="text" id="dish-name" required placeholder="e.g. Paneer Tikka Masala"
+            class="w-full text-xs font-bold bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 focus:border-red-500" />
+        </div>
+
+        <!-- Half & Full Size Settings -->
+        <div class="p-3 bg-red-50/60 border border-red-200 rounded-2xl">
+          <label class="inline-flex items-center gap-2 cursor-pointer mb-2">
+            <input type="checkbox" id="dish-has-hf" onchange="toggleAddHalfFullFields()" class="rounded text-red-600 focus:ring-red-500 w-4 h-4">
+            <span class="text-xs font-bold text-red-900">Has Half & Full Plate Sizes</span>
+          </label>
+          <div id="dish-hf-fields" class="grid grid-cols-2 gap-3 hidden">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Half Plate Price (₹)</label>
+              <input type="number" step="0.5" id="dish-half-price" placeholder="100" class="w-full text-xs font-bold bg-white border border-gray-200 rounded-xl px-3 py-2" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">Full Plate Price (₹)</label>
+              <input type="number" step="0.5" id="dish-full-price" placeholder="180" class="w-full text-xs font-bold bg-white border border-gray-200 rounded-xl px-3 py-2" />
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Standard / Single Price (₹) *</label>
+            <input type="number" step="0.5" id="dish-price" required placeholder="299"
+              class="w-full text-sm font-extrabold text-gray-900 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 focus:border-red-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Original Price (Strikethrough ₹)</label>
+            <input type="number" step="0.5" id="dish-orig-price" placeholder="399"
+              class="w-full text-sm font-extrabold text-gray-500 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 focus:border-red-500" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Category</label>
+            <select id="dish-category"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 font-bold">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Prep Time</label>
+            <input type="text" id="dish-prep-time" value="20-25 mins"
+              class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2" />
+          </div>
+        </div>
+
+        <!-- Photo URL & Preview -->
+        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-200">
+          <img id="add-image-preview" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80"
+            alt="Preview" class="w-16 h-16 rounded-xl object-cover border border-gray-300 flex-shrink-0" />
+          <div class="flex-1">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Photo Image URL *</label>
+            <input type="url" id="dish-image" required
+              value="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80"
+              oninput="updateImagePreview('dish-image', 'add-image-preview')"
+              class="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-2 font-mono text-gray-600 focus:outline-none focus:border-red-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Description</label>
+          <textarea id="dish-desc" rows="2" placeholder="Tell customers about the taste, ingredients and spices..."
+            class="w-full text-xs bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:border-red-500"></textarea>
+        </div>
+
+        <div class="flex items-center gap-4 pt-1">
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="dish-veg" checked
+              class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+            <span class="text-xs font-bold text-gray-700">Vegetarian</span>
+          </label>
+
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="dish-bestseller" class="rounded text-amber-600 focus:ring-amber-500 w-4 h-4">
+            <span class="text-xs font-bold text-gray-700">Mark as Bestseller</span>
+          </label>
+        </div>
+
+        <div class="pt-4 flex justify-end gap-2">
+          <button type="button" onclick="closeAddDishModal()"
+            class="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100">
+            Cancel
+          </button>
+          <button type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-md transition">
+            Add to Menu 🍽️
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin JS -->
+  <script src="/js/admin.js"></script>
+</body>
+
+</html>

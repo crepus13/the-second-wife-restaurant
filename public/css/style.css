@@ -1,0 +1,244 @@
+/* 
+  THE SECOND WIFE FAMILY RESTAURANT - Custom Styles & Zomato/Swiggy UI Polish
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
+
+:root {
+  --primary-red: #E23744;
+  /* Zomato red vibe */
+  --primary-orange: #FC8019;
+  /* Swiggy orange vibe */
+  --accent-gold: #D4AF37;
+  --dark-charcoal: #1C1C24;
+  --veg-green: #0F8A65;
+  --nonveg-red: #E23744;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1F2937;
+  background-color: #F9FAFB;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F1F1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Veg / Non-Veg Icons (Indian Standard) */
+.food-symbol-veg {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #0F8A65;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  background-color: white;
+  padding: 1px;
+}
+
+.food-symbol-veg::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background-color: #0F8A65;
+  border-radius: 50%;
+}
+
+.food-symbol-nonveg {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #E23744;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  background-color: white;
+  padding: 1px;
+}
+
+.food-symbol-nonveg::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 4.5px solid transparent;
+  border-right: 4.5px solid transparent;
+  border-bottom: 8px solid #E23744;
+}
+
+/* Dish Card Hover & Effects */
+.dish-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+.dish-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.08);
+}
+
+.dish-card-img {
+  transition: transform 0.4s ease;
+}
+
+.dish-card:hover .dish-card-img {
+  transform: scale(1.05);
+}
+
+/* Custom Add Button */
+.add-btn {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.15s ease-in-out;
+}
+
+.add-btn:active {
+  transform: scale(0.95);
+}
+
+/* Banner Carousel Gradient Overlay */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.85) 0%, rgba(20, 20, 20, 0.45) 100%);
+}
+
+.badge-bestseller {
+  background: linear-gradient(90deg, #F59E0B, #D97706);
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badge-discount {
+  background: #0F8A65;
+  color: white;
+  font-weight: 700;
+}
+
+/* Drawer Animation */
+.cart-drawer-enter {
+  transform: translateX(100%);
+}
+
+.cart-drawer-active {
+  transform: translateX(0);
+}
+
+/* Order Tracker Progress Line */
+.step-complete {
+  background-color: #10B981;
+  color: white;
+}
+
+.step-current {
+  background-color: #E23744;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.step-pending {
+  background-color: #E5E7EB;
+  color: #9CA3AF;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(226, 55, 68, 0.6);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(226, 55, 68, 0);
+  }
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 300px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #1F2937;
+  color: white;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 0.95rem;
+}
+
+.toast-success {
+  border-left: 5px solid #10B981;
+}
+
+.toast-error {
+  border-left: 5px solid #EF4444;
+}
+
+.toast-info {
+  border-left: 5px solid #3B82F6;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Shimmer Loading Animation */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}

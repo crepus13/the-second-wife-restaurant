@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE SECOND WIFE FAMILY RESTURANT | Order Food Online & Table Reservations</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#E23744',
+              orange: '#FC8019',
+              dark: '#1C1C24'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="bg-gray-50 min-h-screen text-gray-800 antialiased selection:bg-red-500 selection:text-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+
+        <!-- Brand Logo & Editable Name -->
+        <div class="flex items-center gap-3">
+          <a href="/" class="flex items-center gap-2.5 group">
+            <div
+              class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-500 text-white flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition">
+              🍽️
+            </div>
+            <div>
+              <span class="brand-name text-lg sm:text-xl lg:text-2xl font-black tracking-tight text-gray-900 font-serif leading-tight block">THE SECOND WIFE FAMILY RESTAURANT</span>
+              <p class="text-[10px] sm:text-[11px] font-semibold text-red-600 uppercase tracking-widest leading-none mt-0.5">Gourmet & Delivery</p>
+            </div>
+          </a>
+
+          <!-- Location  -->
+          <div
+            class="hidden lg:flex items-center gap-2 text-xs text-gray-600 bg-gray-100/80 hover:bg-gray-200/80 px-3 py-1.5 rounded-full cursor-pointer transition ml-2">
+            <span class="text-red-600 text-sm">📍</span>
+            <span class="font-bold text-gray-800 truncate max-w-[150px]">Sector 14, Downtown</span>
+            <span class="text-gray-400">▼</span>
+          </div>
+        </div>
+
+        <!-- Central Search Bar (Instant Filter) -->
+        <div class="hidden md:flex flex-1 max-w-md mx-4">
+          <div class="relative w-full">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+              🔍
+            </span>
+            <input type="text" id="main-search-input" placeholder="Search for biryani, pizza, burger, momos, curries..."
+              class="w-full pl-10 pr-4 py-2 text-sm bg-gray-100/90 hover:bg-gray-100 focus:bg-white border border-transparent focus:border-red-500 rounded-full focus:outline-none transition shadow-inner" />
+          </div>
+        </div>
+
+        <!-- Right Side Nav Actions -->
+        <div class="flex items-center gap-3">
+          <!-- Offers Link -->
+          <a href="#offers-section"
+            class="hidden sm:flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-red-600 transition px-2.5 py-1.5 rounded-lg">
+            <span>🏷️</span> Offers
+          </a>
+
+          <!-- Book Table Button -->
+          <button onclick="openReservationModal()"
+            class="hidden sm:flex items-center gap-1.5 text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 transition px-3.5 py-2 rounded-xl">
+            <span>🍽️</span> Book Table
+          </button>
+
+          <!-- Auth Status Container (Sign In / Register or User Avatar Dropdown) -->
+          <div id="user-nav-container" class="flex items-center gap-2">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+
+          <!-- Cart Button (Zomato / Swiggy Style) -->
+          <button onclick="openCartDrawer()"
+            class="relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition">
+            <span class="text-base">🛒</span>
+            <span class="hidden sm:inline">Cart</span>
+            <span
+              class="cart-count-badge bg-white text-red-600 text-xs px-2 py-0.5 rounded-full font-black hidden">0</span>
+            <span
+              class="cart-price-indicator text-xs font-extrabold text-red-100 pl-1 hidden sm:inline border-l border-red-500">₹0</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Search Bar (Below Header on small screens) -->
+      <div class="md:hidden pb-3 pt-1">
+        <div class="relative w-full">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+            🔍
+          </span>
+          <input type="text"
+            oninput="document.getElementById('main-search-input').value = this.value; document.getElementById('main-search-input').dispatchEvent(new Event('input'))"
+            placeholder="Search dishes or cuisines..."
+            class="w-full pl-10 pr-4 py-2 text-xs bg-gray-100 rounded-full focus:outline-none focus:ring-1 focus:ring-red-500 border border-gray-200" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="relative bg-gray-900 text-white overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80" alt="Restaurant Ambiance"
+        class="w-full h-full object-cover opacity-35 scale-105 filter blur-[0.5px]">
+      <div class="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/80 to-transparent"></div>
+    </div>
+
+    <div
+      class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28 flex flex-col justify-center">
+      <div class="max-w-2xl">
+        <div
+          class="inline-flex items-center gap-2 bg-red-600/90 text-white text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full mb-4 shadow-sm">
+          🔥 Top Rated Restaurant in Town
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-black font-serif tracking-tight leading-tight mb-4">
+          Unforgettable Flavors, <br />
+          <span class="text-red-500 italic">Delivered to Your Door.</span>
+        </h1>
+        <p class="brand-tagline text-base sm:text-lg text-gray-300 mb-8 max-w-xl font-light">
+          From slow-cooked royal Awadhi dum biryanis to artisan wood-fired sourdough pizzas. Experience mastercraft
+          dining at home or at our tables.
+        </p>
+
+        <!-- Hero CTAs -->
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#menu-section"
+            class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm sm:text-base px-7 py-3.5 rounded-2xl shadow-lg hover:shadow-red-500/25 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+            <span>Explore Menu & Order</span>
+            <span>➔</span>
+          </a>
+          <button onclick="openReservationModal()"
+            class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-bold text-sm sm:text-base px-6 py-3.5 rounded-2xl transition">
+            🍽️ Reserve a Table
+          </button>
+        </div>
+
+        <!-- Trust Badges -->
+        <div
+          class="mt-10 pt-6 border-t border-white/10 flex flex-wrap items-center gap-6 text-xs text-gray-300 font-medium">
+          <div class="flex items-center gap-2">
+            <span class="text-yellow-400 text-base">★</span>
+            <span><b>4.8/5</b> Customer Rating (1,200+ reviews)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-red-400 text-base">⚡</span>
+            <span><b>30 Mins</b> Fast Delivery Guarantee</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400 text-base">🌱</span>
+            <span>100% Fresh & Authentic Ingredients</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OFFERS & PROMOS CAROUSEL ================= -->
+  <section id="offers-section" class="py-8 bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2 font-serif">
+            <span>🏷️</span> Deals & Discounts For You
+          </h2>
+          <p class="text-xs text-gray-500">Apply promo codes at checkout for instant price drops!</p>
+        </div>
+      </div>
+
+      <!-- Horizontal scrolling offers container -->
+      <div id="offer-banners-container" class="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-none">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INSPIRATION CUISINES / CATEGORIES ================= -->
+  <section class="py-8 bg-gray-50/60 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-xl sm:text-2xl font-black text-gray-900 mb-6 font-serif">
+        What are you craving today?
+      </h2>
+
+      <!-- Circular Categories Slider -->
+      <div id="category-filter-container" class="flex gap-5 sm:gap-8 overflow-x-auto pb-4 pt-1 scrollbar-none">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MAIN MENU & FOOD CATALOG ================= -->
+  <section id="menu-section" class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Filter, Veg-toggle & Sorting Bar -->
+    <div
+      class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-gray-100 mb-8 flex flex-wrap items-center justify-between gap-4">
+
+      <!-- Left Filters: Veg Only & Bestsellers -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Pure Veg Toggle -->
+        <label
+          class="inline-flex items-center gap-2.5 cursor-pointer bg-gray-50 hover:bg-emerald-50/50 border border-gray-200 hover:border-emerald-300 px-3.5 py-1.5 rounded-xl transition">
+          <input type="checkbox" id="veg-only-toggle" class="sr-only peer">
+          <span class="food-symbol-veg"></span>
+          <span class="text-xs font-bold text-gray-700 peer-checked:text-emerald-700">Pure Veg Only</span>
+          <div
+            class="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-600 relative">
+          </div>
+        </label>
+
+        <!-- Bestsellers Toggle -->
+        <label
+          class="inline-flex items-center gap-2 cursor-pointer bg-gray-50 hover:bg-amber-50 border border-gray-200 hover:border-amber-300 px-3.5 py-1.5 rounded-xl transition">
+          <input type="checkbox" id="bestseller-toggle" class="sr-only peer">
+          <span class="text-amber-500 text-xs">⭐</span>
+          <span class="text-xs font-bold text-gray-700 peer-checked:text-amber-700">Bestsellers</span>
+          <div
+            class="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500 relative">
+          </div>
+        </label>
+
+        <!-- Items Counter -->
+        <span id="items-count-indicator" class="text-xs text-gray-400 font-semibold pl-2">
+          Loading dishes...
+        </span>
+      </div>
+
+      <!-- Right: Sort By Dropdown -->
+      <div class="flex items-center gap-2 text-xs">
+        <span class="text-gray-500 font-medium">Sort by:</span>
+        <select id="sort-by-select"
+          class="bg-gray-50 border border-gray-200 text-gray-800 text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none focus:border-red-500">
+          <option value="popularity">Popularity / Chef's Pick</option>
+          <option value="rating">Highest Rated ★</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Dish Cards Grid -->
+    <div id="menu-items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Dishes rendered dynamically by app.js -->
+    </div>
+
+  </section>
+
+  <!-- ================= TABLE RESERVATION BANNER ================= -->
+  <section class="my-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      class="relative bg-gradient-to-r from-red-900 to-gray-900 rounded-3xl overflow-hidden shadow-xl text-white p-8 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="max-w-xl z-10">
+        <span
+          class="text-xs uppercase font-extrabold tracking-widest text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full">Fine
+          Dining & Atmosphere</span>
+        <h2 class="text-3xl sm:text-4xl font-serif font-black mt-3 mb-2 leading-tight">
+          Planning a Romantic Dinner or Family Gathering?
+        </h2>
+        <p class="text-gray-300 text-sm font-light mb-6">
+          Reserve your preferred table in seconds. Choose from our scenic window seats, romantic candlelight booths, or
+          grand outdoor garden dining.
+        </p>
+        <button onclick="openReservationModal()"
+          class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm px-6 py-3 rounded-xl shadow-md transition transform hover:scale-105">
+          Book Table Now 🍽️
+        </button>
+      </div>
+
+      <div class="w-full md:w-auto flex-shrink-0 z-10">
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-center">
+          <div class="text-4xl mb-2">🥂</div>
+          <h4 class="font-bold text-sm">Table Reservations</h4>
+          <p class="text-xs text-gray-300 mt-1">Instant confirmation • Zero booking fee</p>
+          <p class="text-[11px] text-amber-300 mt-2 font-mono brand-phone">+91 98765 43210</p>
+        </div>
+      </div>
+
+      <!-- Decorative Shape -->
+      <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-red-600/20 rounded-full blur-3xl pointer-events-none">
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT & REVIEWS SECTION ================= -->
+  <section class="py-12 bg-white border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="text-2xl sm:text-3xl font-serif font-black text-gray-900">What Diners Are Saying</h2>
+        <p class="text-xs text-gray-500 mt-2">Authentic reviews from verified customers ordering and dining with us.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Review 1 -->
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+          <div class="flex text-amber-400 text-sm mb-2">★★★★★</div>
+          <p class="text-xs text-gray-600 italic leading-relaxed">
+            "The Awadhi Dum Biryani is out of this world! Melt-in-mouth chicken and the aroma fills the entire room.
+            Fast delivery and piping hot packaging."
+          </p>
+          <div class="mt-4 flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-full bg-red-100 text-red-700 font-bold text-xs flex items-center justify-center">R
+            </div>
+            <div>
+              <h5 class="text-xs font-bold text-gray-900">Rohit Sharma</h5>
+              <span class="text-[10px] text-gray-400">Regular Customer • 24 Orders</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+          <div class="flex text-amber-400 text-sm mb-2">★★★★★</div>
+          <p class="text-xs text-gray-600 italic leading-relaxed">
+            "We booked a candlelight table for our anniversary. The service was impeccable, and the Sizzling Brownie
+            with vanilla ice cream was pure heaven."
+          </p>
+          <div class="mt-4 flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 font-bold text-xs flex items-center justify-center">
+              P</div>
+            <div>
+              <h5 class="text-xs font-bold text-gray-900">Pooja & Ankit</h5>
+              <span class="text-[10px] text-gray-400">Table Dining Experience</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+          <div class="flex text-amber-400 text-sm mb-2">★★★★★</div>
+          <p class="text-xs text-gray-600 italic leading-relaxed">
+            "Used coupon XYZ50 and got 50% discount! The Farmhouse Truffle Pizza was crisp and loaded with cheese.
+            Swiggy/Zomato level convenience."
+          </p>
+          <div class="mt-4 flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center">
+              S</div>
+            <div>
+              <h5 class="text-xs font-bold text-gray-900">Simran Kaur</h5>
+              <span class="text-[10px] text-gray-400">First-time Orderer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-gray-950 text-gray-400 text-xs py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+
+        <!-- Brand Info -->
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 text-white font-serif font-black text-xl mb-3">
+            <span>🍽️</span>
+            <span class="brand-name">THE SECOND WIFE FAMILY RESTURANT</span>
+          </div>
+          <p class="brand-tagline text-gray-400 text-xs leading-relaxed max-w-sm mb-4">
+            Fresh culinary perfection delivered lightning-fast to your doorstep.
+          </p>
+          <div class="space-y-1 text-gray-400 text-xs">
+            <p>📍 <b>Address:</b> <span class="brand-address">42 Gourmet Boulevard, Food District, City</span></p>
+            <p>📞 <b>Helpline:</b> <span class="brand-phone">+91 98765 43210</span></p>
+            <p>⏰ <b>Kitchen Hours:</b> Open 7 Days • 11:00 AM – 11:30 PM</p>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-white font-bold text-sm mb-3">Explore</h4>
+          <ul class="space-y-2">
+            <li><a href="#menu-section" class="hover:text-white transition">Menu & Dishes</a></li>
+            <li><a href="#offers-section" class="hover:text-white transition">Special Coupons & Offers</a></li>
+            <li><button onclick="openReservationModal()" class="hover:text-white transition text-left">Book
+                Table</button></li>
+            <li><button onclick="openOrdersModal()" class="hover:text-white transition text-left">Track Past
+                Orders</button></li>
+          </ul>
+        </div>
+
+        <!-- Admin & Staff -->
+        <div>
+          <h4 class="text-white font-bold text-sm mb-3">Staff & Management</h4>
+          <p class="text-gray-400 text-[11px] mb-3">
+            Authorized restaurant management access for price edits, menu photos & live kitchen orders.
+          </p>
+          <a href="/admin.html"
+            class="inline-flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 border border-amber-500/30 px-3.5 py-2 rounded-xl font-bold transition text-xs">
+            <span>👑</span> Admin Management Portal
+          </a>
+        </div>
+
+      </div>
+
+      <div
+        class="pt-8 border-t border-gray-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-gray-500">
+        <p>&copy; <span class="brand-name">THE SECOND WIFE FAMILY RESTURANT</span>. All Rights Reserved. Built with full Zomato/Swiggy
+          features.</p>
+        <div class="flex gap-4">
+          <span class="text-gray-400">100% Safe Payments</span>
+          <span>•</span>
+          <span class="text-gray-400">FSSAI Certified Hygiene</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= FLOATING MOBILE CART BAR ================= -->
+  <div id="mobile-cart-bar"
+    class="fixed bottom-0 left-0 right-0 z-30 p-3 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl hidden md:hidden">
+    <div class="flex items-center justify-between bg-red-600 text-white p-3 rounded-2xl shadow-lg">
+      <div class="flex items-center gap-2 pl-2">
+        <span>🛒</span>
+        <span id="mobile-cart-items-text" class="text-xs font-black">1 item | ₹349</span>
+      </div>
+      <button onclick="openCartDrawer()"
+        class="bg-white text-red-600 font-extrabold text-xs px-4 py-2 rounded-xl shadow-xs flex items-center gap-1">
+        View Cart ➔
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= CART SLIDING DRAWER ================= -->
+  <div id="cart-drawer-overlay" onclick="closeCartDrawer()"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden transition-opacity"></div>
+
+  <div id="cart-drawer"
+    class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-white z-50 shadow-2xl flex flex-col translate-x-full transition-transform duration-300 ease-out">
+
+    <!-- Drawer Header -->
+    <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🛒</span>
+        <h3 class="font-extrabold text-base text-gray-900">Your Feast Cart</h3>
+      </div>
+      <button onclick="closeCartDrawer()"
+        class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-600 flex items-center justify-center font-bold text-sm transition">
+        &times;
+      </button>
+    </div>
+
+    <!-- Empty View -->
+    <div id="cart-empty-view" class="flex-1 flex flex-col items-center justify-center p-8 text-center hidden">
+      <div class="text-6xl mb-4">🍽️</div>
+      <h4 class="font-bold text-gray-800 text-lg">Your cart is empty</h4>
+      <p class="text-xs text-gray-500 mt-1 max-w-xs">Good food is always cooking! Add your favorite dishes from the menu
+        to satisfy your cravings.</p>
+      <button onclick="closeCartDrawer()"
+        class="mt-6 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl transition">
+        Browse Dishes
+      </button>
+    </div>
+
+    <!-- Filled View (Scrollable items + bill details) -->
+    <div id="cart-filled-view" class="flex-1 overflow-y-auto p-4 flex flex-col justify-between">
+
+      <div>
+        <!-- Order Type Toggle (Delivery vs Takeaway) -->
+        <div class="bg-gray-100 p-1 rounded-xl flex gap-1 mb-4">
+          <button id="btn-order-delivery" onclick="setOrderType('delivery')"
+            class="flex-1 py-2 text-xs font-bold rounded-lg bg-red-600 text-white shadow-sm transition">
+            🛵 Delivery (30 mins)
+          </button>
+          <button id="btn-order-takeaway" onclick="setOrderType('takeaway')"
+            class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-600 hover:bg-gray-100 transition">
+            🛍️ Takeaway / Pickup
+          </button>
+        </div>
+
+        <!-- Address Bar in Cart -->
+        <div id="cart-address-section" class="mb-4 p-3 bg-red-50/50 border border-red-100 rounded-xl">
+          <div class="flex items-start justify-between">
+            <div class="flex items-start gap-2">
+              <span class="text-red-600 text-sm mt-0.5">📍</span>
+              <div>
+                <span class="text-xs font-bold text-gray-800">Delivering to</span>
+                <p class="text-[11px] text-gray-600 mt-0.5 leading-snug" id="cart-address-display">Apt 4B, Sunshine
+                  Towers, Sector 14, Downtown</p>
+              </div>
+            </div>
+            <button onclick="openCheckoutModal()" class="text-xs font-bold text-red-600 hover:underline">Change</button>
+          </div>
+        </div>
+
+        <!-- Cart Items List -->
+        <div class="mb-4">
+          <h4 class="text-xs uppercase font-extrabold text-gray-400 tracking-wider mb-2">Selected Items</h4>
+          <div id="cart-items-list" class="space-y-1">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+        <!-- Coupons & Offers Accordion in Cart -->
+        <div class="mb-5 pt-3 border-t border-gray-100">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-extrabold text-gray-700 flex items-center gap-1.5">
+              <span>🏷️</span> Apply Restaurant Coupon
+            </span>
+          </div>
+
+          <!-- Applied Coupon Indicator -->
+          <div id="applied-coupon-box"
+            class="hidden mb-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs">
+            <div class="flex items-center gap-1.5 text-emerald-800 font-bold">
+              <span>🎉</span>
+              <span id="applied-coupon-text">XYZ50 Applied!</span>
+            </div>
+            <button onclick="removeAppliedCoupon()"
+              class="text-emerald-700 hover:text-emerald-900 font-bold text-xs underline">Remove</button>
+          </div>
+
+          <!-- Manual Code Input -->
+          <div class="flex gap-2 mb-2">
+            <input type="text" id="manual-coupon-input" placeholder="Enter code (e.g. XYZ50)"
+              class="flex-1 text-xs uppercase px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-mono font-bold" />
+            <button onclick="handleManualCoupon()"
+              class="bg-gray-800 hover:bg-gray-900 text-white text-xs font-bold px-3 py-2 rounded-xl transition">
+              Apply
+            </button>
+          </div>
+
+          <!-- Available Coupons List -->
+          <div id="cart-coupons-list" class="space-y-1.5 mt-2 max-h-36 overflow-y-auto">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+        <!-- Bill Details Summary -->
+        <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 text-xs space-y-2 mb-4">
+          <h5 class="font-extrabold text-gray-900 pb-1 border-b border-gray-200">Bill Details</h5>
+          <div class="flex justify-between text-gray-600">
+            <span>Item Total</span>
+            <span id="bill-subtotal" class="font-bold text-gray-900">₹0</span>
+          </div>
+          <div id="bill-discount-row" class="flex justify-between text-emerald-700 font-bold hidden">
+            <span>Coupon Discount</span>
+            <span id="bill-discount">-₹0</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Delivery Partner Fee</span>
+            <span id="bill-delivery" class="font-bold">₹40</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Restaurant Packaging</span>
+            <span id="bill-packaging" class="font-bold">₹25</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Taxes & GST (5%)</span>
+            <span id="bill-taxes" class="font-bold">₹0</span>
+          </div>
+          <div
+            class="pt-2 border-t border-gray-200 flex justify-between items-center text-sm font-extrabold text-gray-900">
+            <span>To Pay (Grand Total)</span>
+            <span id="bill-grand-total" class="text-base text-red-600">₹0</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Checkout CTA Button -->
+      <div class="pt-2">
+        <button onclick="openCheckoutModal()"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-2xl shadow-lg transition flex items-center justify-between px-4">
+          <span class="text-xs uppercase tracking-wider">Select Payment</span>
+          <span class="flex items-center gap-1 font-black text-sm">Proceed to Checkout ➔</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ================= PORTION SIZE CUSTOMIZATION MODAL (Half / Full Plate) ================= -->
+  <div id="portion-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-scaleUp">
+      <button onclick="closePortionModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold text-2xl leading-none">&times;</button>
+      
+      <div class="flex items-center gap-3 pb-3 border-b border-gray-100 mb-4">
+        <img id="portion-item-img" src="" alt="Dish" class="w-16 h-16 rounded-2xl object-cover border border-gray-100 flex-shrink-0" />
+        <div>
+          <div class="flex items-center gap-1.5 mb-0.5">
+            <span id="portion-item-veg" class="food-symbol-veg"></span>
+            <span class="text-[10px] font-bold text-red-600 uppercase tracking-wider">Choose Portion Size</span>
+          </div>
+          <h4 id="portion-item-name" class="font-extrabold text-base text-gray-900 leading-snug line-clamp-1">Dish Name</h4>
+          <p id="portion-item-desc" class="text-xs text-gray-400 line-clamp-1 mt-0.5"></p>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <div class="space-y-2.5">
+          <!-- Half Plate Option -->
+          <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-gray-200 hover:border-red-500 cursor-pointer transition has-[:checked]:border-red-600 has-[:checked]:bg-red-50/50">
+            <div class="flex items-center gap-3">
+              <input type="radio" id="portion-radio-half" name="dishPortion" value="Half" checked onchange="updatePortionBtnPrice()" 
+                     class="text-red-600 focus:ring-red-500 w-4 h-4">
+              <div>
+                <span class="font-black text-sm text-gray-900">Half Plate (H)</span>
+                <p class="text-[11px] text-gray-500 font-medium">Standard single serving</p>
+              </div>
+            </div>
+            <span id="portion-price-half" class="font-black text-sm text-gray-900">₹0</span>
+          </label>
+
+          <!-- Full Plate Option -->
+          <label class="flex items-center justify-between p-3.5 rounded-2xl border-2 border-gray-200 hover:border-red-500 cursor-pointer transition has-[:checked]:border-red-600 has-[:checked]:bg-red-50/50">
+            <div class="flex items-center gap-3">
+              <input type="radio" id="portion-radio-full" name="dishPortion" value="Full" onchange="updatePortionBtnPrice()" 
+                     class="text-red-600 focus:ring-red-500 w-4 h-4">
+              <div>
+                <span class="font-black text-sm text-gray-900">Full Plate (F)</span>
+                <p class="text-[11px] text-gray-500 font-medium">Full meal portion</p>
+              </div>
+            </div>
+            <span id="portion-price-full" class="font-black text-sm text-gray-900">₹0</span>
+          </label>
+        </div>
+      </div>
+
+      <button type="button" onclick="confirmAddPortion()" 
+              id="portion-add-btn-price"
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-2xl shadow-lg transition text-sm">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= CHECKOUT & PAYMENT MODAL ================= -->
+  <div id="checkout-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeCheckoutModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+
+      <h3 class="text-xl font-black font-serif text-gray-900 mb-1">Confirm Order & Payment</h3>
+      <p class="text-xs text-gray-500 mb-6">Review your delivery details and choose your preferred payment option.</p>
+
+      <form onsubmit="handlePlaceOrder(event)" class="space-y-4">
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Your Full Name *</label>
+          <input type="text" id="checkout-name" required placeholder="e.g. Aryan Bhushan"
+            class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number *</label>
+            <input type="tel" id="checkout-phone" required placeholder="+91 98765 43210"
+              class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Delivery Address *</label>
+            <input type="text" id="checkout-address" required placeholder="Flat / House / Landmark"
+              class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Special Cooking / Delivery Instructions
+            (Optional)</label>
+          <input type="text" id="checkout-notes" placeholder="e.g. Less spicy, Leave package at door, Don't ring bell"
+            class="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500" />
+        </div>
+
+        <!-- Payment Options (Zomato/Swiggy Style) -->
+        <div class="pt-3 border-t border-gray-100">
+          <label class="block text-xs font-bold text-gray-700 mb-2">Select Payment Method</label>
+          <div class="space-y-2">
+
+            <label
+              class="flex items-center justify-between p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="paymentMethod" value="Cash on Delivery" checked
+                  class="text-red-600 focus:ring-red-500">
+                <div>
+                  <span class="text-xs font-bold text-gray-800">💵 Cash on Delivery (Pay on arrival)</span>
+                  <p class="text-[10px] text-gray-400">Pay via Cash or UPI QR to delivery valet</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-emerald-600">Instant</span>
+            </label>
+
+            <label
+              class="flex items-center justify-between p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="paymentMethod" value="UPI" class="text-red-600 focus:ring-red-500">
+                <div>
+                  <span class="text-xs font-bold text-gray-800">📱 UPI (Google Pay, PhonePe, Paytm)</span>
+                  <p class="text-[10px] text-gray-400">Instant paperless checkout</p>
+                </div>
+              </div>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">FAST</span>
+            </label>
+
+            <label
+              class="flex items-center justify-between p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="paymentMethod" value="Card" class="text-red-600 focus:ring-red-500">
+                <div>
+                  <span class="text-xs font-bold text-gray-800">💳 Credit / Debit Cards</span>
+                  <p class="text-[10px] text-gray-400">Visa, Mastercard, Rupay</p>
+                </div>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] text-gray-400">Total Payable Amount</span>
+            <p id="checkout-grand-total" class="text-xl font-black text-gray-900">₹0</p>
+          </div>
+          <button type="submit" id="place-order-submit-btn"
+            class="bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm px-7 py-3 rounded-xl shadow-lg transition">
+            Confirm & Place Order
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= LIVE ORDER TRACKING MODAL ================= -->
+  <div id="tracking-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeLiveTrackingModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+
+      <div class="text-center mb-6">
+        <div
+          class="w-14 h-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+          🛵
+        </div>
+        <span class="text-xs font-mono font-bold text-gray-400 uppercase tracking-widest">Order ID: <span
+            id="tracking-order-id">XYZ-0000</span></span>
+        <h3 id="tracking-status-title" class="text-xl font-black text-gray-900 mt-1">Order Confirmed</h3>
+        <p id="tracking-status-desc" class="text-xs text-gray-500 mt-0.5">The chef is reviewing your items.</p>
+
+        <div
+          class="mt-4 inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-4 py-1.5 rounded-full text-xs font-bold border border-emerald-200">
+          <span>⏱️ Estimated Delivery:</span>
+          <span id="tracking-eta" class="font-extrabold">30-35 mins</span>
+        </div>
+      </div>
+
+      <!-- Realtime Stepper -->
+      <div class="relative py-4 mb-6">
+        <div class="flex items-center justify-between relative z-10">
+
+          <div class="flex flex-col items-center">
+            <div id="track-step-1"
+              class="w-9 h-9 rounded-full step-complete flex items-center justify-center font-bold text-sm">📝</div>
+            <span class="text-[10px] font-bold text-gray-700 mt-1.5">Placed</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div id="track-step-2"
+              class="w-9 h-9 rounded-full step-pending flex items-center justify-center font-bold text-sm">👨‍🍳</div>
+            <span class="text-[10px] font-bold text-gray-700 mt-1.5">Kitchen</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div id="track-step-3"
+              class="w-9 h-9 rounded-full step-pending flex items-center justify-center font-bold text-sm">🛵</div>
+            <span class="text-[10px] font-bold text-gray-700 mt-1.5">On Way</span>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <div id="track-step-4"
+              class="w-9 h-9 rounded-full step-pending flex items-center justify-center font-bold text-sm">🎉</div>
+            <span class="text-[10px] font-bold text-gray-700 mt-1.5">Delivered</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Items Ordered Box -->
+      <div class="bg-gray-50 rounded-2xl p-3.5 border border-gray-100 mb-4">
+        <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Your Order Items</span>
+        <div id="tracking-items-list" class="space-y-1"></div>
+      </div>
+
+      <div class="flex justify-between items-center text-xs text-gray-500">
+        <span>Need assistance?</span>
+        <a href="tel:+919876543210" class="font-bold text-red-600 hover:underline">Call Restaurant Support</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TABLE RESERVATION MODAL ================= -->
+  <div id="reservation-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeReservationModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl">🍽️</div>
+        <div>
+          <h3 class="text-xl font-black font-serif text-gray-900">Table Reservation</h3>
+          <p class="text-xs text-gray-500">Instant confirmation • No reservation charges</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleReservationSubmit(event)" class="space-y-3.5">
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Guest Full Name *</label>
+          <input type="text" id="res-name" required placeholder="e.g. Aryan Bhushan"
+            class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number *</label>
+            <input type="tel" id="res-phone" required placeholder="+91 98765 43210"
+              class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Email Address</label>
+            <input type="email" id="res-email" placeholder="name@email.com"
+              class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Date *</label>
+            <input type="date" id="res-date" required
+              class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-bold" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Time Slot *</label>
+            <select id="res-time" required
+              class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-bold">
+              <option value="12:30 PM">12:30 PM (Lunch)</option>
+              <option value="01:30 PM">01:30 PM (Lunch)</option>
+              <option value="02:30 PM">02:30 PM (Lunch)</option>
+              <option value="07:00 PM">07:00 PM (Dinner)</option>
+              <option value="08:00 PM" selected>08:00 PM (Dinner)</option>
+              <option value="09:00 PM">09:00 PM (Dinner)</option>
+              <option value="10:00 PM">10:00 PM (Late Dinner)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Party Size *</label>
+            <select id="res-guests"
+              class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-bold">
+              <option value="1">1 Person</option>
+              <option value="2" selected>2 Persons</option>
+              <option value="3">3 Persons</option>
+              <option value="4">4 Persons</option>
+              <option value="5">5 Persons</option>
+              <option value="6">6 Persons</option>
+              <option value="8">8+ Large Family</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Seating Preference</label>
+          <select id="res-seating"
+            class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500">
+            <option value="Standard Dining">Standard Dining Hall</option>
+            <option value="Romantic Candlelight Booth">Romantic Candlelight Booth</option>
+            <option value="Window View Seating">Window View Seating</option>
+            <option value="Outdoor Terrace Garden">Outdoor Terrace Garden</option>
+            <option value="Private VIP Room">Private VIP Room</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Special Occasion / Notes (Optional)</label>
+          <input type="text" id="res-notes" placeholder="e.g. Birthday celebration, High chair for toddler, Anniversary"
+            class="w-full px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500" />
+        </div>
+
+        <div class="pt-4">
+          <button type="submit" id="res-submit-btn"
+            class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg transition">
+            Confirm Table Booking
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= AUTH MODAL (LOGIN & SIGNUP) ================= -->
+  <div id="auth-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeAuthModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+
+      <div class="text-center mb-6">
+        <div
+          class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto mb-2 font-serif font-black">
+          🍽️
+        </div>
+        <h3 class="text-2xl font-black font-serif text-gray-900">Welcome to <span class="brand-name">THE SECOND WIFE FAMILY RESTURANT</span></h3>
+        <p class="text-xs text-gray-500">Sign in to track orders, save addresses & unlock member discounts.</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex border-b border-gray-100 mb-6">
+        <button id="tab-btn-login" onclick="switchAuthTab('login')"
+          class="flex-1 py-3 text-sm font-bold text-red-600 border-b-2 border-red-600">
+          Sign In
+        </button>
+        <button id="tab-btn-register" onclick="switchAuthTab('register')"
+          class="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Quick Demo Login Bar -->
+      <div class="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+        <p class="text-[11px] font-bold text-amber-800 mb-1.5 flex items-center gap-1">
+          <span>⚡</span> Quick 1-Click Demo Login:
+        </p>
+        <div class="flex gap-2">
+          <button type="button" onclick="fillDemoLogin('customer')"
+            class="flex-1 bg-white hover:bg-amber-100 text-gray-800 text-xs font-bold py-1.5 px-2 rounded-lg border border-amber-300 transition">
+            👤 Demo Customer
+          </button>
+          <button type="button" onclick="fillDemoLogin('admin')"
+            class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-1.5 px-2 rounded-lg transition">
+            👑 Demo Admin
+          </button>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="auth-login-form" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Email Address</label>
+          <input type="email" id="login-email" required placeholder="name@email.com"
+            class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••"
+            class="w-full px-3.5 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+        </div>
+        <button type="submit"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-md transition mt-2">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="auth-register-form" onsubmit="handleRegisterSubmit(event)" class="space-y-3 hidden">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Your Full Name *</label>
+          <input type="text" id="reg-name" required placeholder="Aryan Bhushan"
+            class="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Email Address *</label>
+          <input type="email" id="reg-email" required placeholder="name@email.com"
+            class="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Password *</label>
+            <input type="password" id="reg-password" required placeholder="••••••••"
+              class="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" id="reg-phone" placeholder="+91 98765..."
+              class="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 font-medium" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Delivery Address</label>
+          <input type="text" id="reg-address" placeholder="Sector, Building, Flat"
+            class="w-full px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500" />
+        </div>
+        <button type="submit"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold text-sm py-3 rounded-xl shadow-md transition mt-2">
+          Create Account
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ================= USER ORDERS HISTORY MODAL ================= -->
+  <div id="orders-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeOrdersModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+      <h3 class="text-xl font-black font-serif text-gray-900 mb-1">My Orders & Feasts</h3>
+      <p class="text-xs text-gray-500 mb-4">View past receipts and track live deliveries.</p>
+
+      <div id="orders-history-list" class="space-y-3">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= USER RESERVATIONS HISTORY MODAL ================= -->
+  <div id="reservations-list-modal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeReservationsListModal()"
+        class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+      <h3 class="text-xl font-black font-serif text-gray-900 mb-1">My Table Bookings</h3>
+      <p class="text-xs text-gray-500 mb-4">Your upcoming and past table reservations.</p>
+
+      <div id="reservations-history-list" class="space-y-3">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application JS -->
+  <script src="/js/app.js"></script>
+</body>
+
+</html>

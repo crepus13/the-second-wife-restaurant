@@ -963,18 +963,24 @@ class RestaurantRequestHandler(BaseHTTPRequestHandler):
 
 def run_server(preferred_port=None):
     init_db()
-    ports_to_try = [preferred_port] if preferred_port else [PORT, 8080, 8888, 3001]
-    ports_to_try = [p for p in ports_to_try if p]
+    if "PORT" in os.environ:
+        ports_to_try = [int(os.environ["PORT"])]
+    elif preferred_port:
+        ports_to_try = [preferred_port]
+    else:
+        ports_to_try = [8000, 8080, 8888, 3001]
+
     httpd = None
     active_port = None
 
     for p in ports_to_try:
         try:
-            server_address = ('', p)
+            server_address = ('0.0.0.0', p)
             httpd = HTTPServer(server_address, RestaurantRequestHandler)
             active_port = p
             break
-        except OSError:
+        except OSError as e:
+            print(f"Port {p} unavailable: {e}")
             continue
 
     if not httpd:

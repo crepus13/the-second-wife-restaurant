@@ -43,23 +43,132 @@ function showAdminToast(message, type = 'success') {
 
 // Check Admin Authentication
 async function verifyAdmin() {
+  const loginScreen = document.getElementById('staff-login-screen');
+  const dashboardApp = document.getElementById('admin-dashboard-app');
+
   try {
     const token = localStorage.getItem('xyz_token');
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
     const res = await fetch(`${API_BASE}/auth/me`, { headers });
     const data = await res.json();
-    if (!data.user || data.user.role !== 'admin') {
-      alert("Access Denied: You must be logged in as an Administrator to view this dashboard.\n\nDefault Admin Login:\nEmail: admin@xyz.com\nPassword: admin123");
-      window.location.href = '/index.html';
+
+    if (data.user && data.user.role === 'admin') {
+      if (loginScreen) loginScreen.classList.add('hidden');
+      if (dashboardApp) dashboardApp.classList.remove('hidden');
+      const profileName = document.getElementById('admin-profile-name');
+      if (profileName) profileName.textContent = data.user.name;
+      return true;
+    } else {
+      if (loginScreen) loginScreen.classList.remove('hidden');
+      if (dashboardApp) dashboardApp.classList.add('hidden');
       return false;
     }
-    document.getElementById('admin-profile-name').textContent = data.user.name;
-    return true;
   } catch (err) {
-    window.location.href = '/index.html';
+    if (loginScreen) loginScreen.classList.remove('hidden');
+    if (dashboardApp) dashboardApp.classList.add('hidden');
     return false;
   }
+}
+
+// Handle Dedicated Staff Login Submission
+async function handleStaffLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('staff-email').value.trim();
+  const password = document.getElementById('staff-password').value;
+  const errorBox = document.getElementById('staff-login-error');
+  const submitBtn = document.getElementById('staff-login-btn');
+
+  if (errorBox) {
+    errorBox.classList.add('hidden');
+    errorBox.textContent = '';
+  }
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Authenticating...';
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.user) {
+      if (errorBox) {
+        errorBox.textContent = data.error || 'Invalid staff email or password.';
+        errorBox.classList.remove('hidden');
+      }
+      return;
+    }
+
+    if (data.user.role !== 'admin') {
+      if (errorBox) {
+        errorBox.textContent = 'Access Denied: You do not have staff administrator privileges.';
+        errorBox.classList.remove('hidden');
+      }
+      return;
+    }
+
+    // Save token
+    if (data.token) {
+      localStorage.setItem('xyz_token', data.token);
+    }
+
+    showAdminToast(`Welcome, ${data.user.name}! 👑`);
+
+    // Reveal Dashboard
+    const loginScreen = document.getElementById('staff-login-screen');
+    const dashboardApp = document.getElementById('admin-dashboard-app');
+    if (loginScreen) loginScreen.classList.add('hidden');
+    if (dashboardApp) dashboardApp.classList.remove('hidden');
+
+    const profileName = document.getElementById('admin-profile-name');
+    if (profileName) profileName.textContent = data.user.name;
+
+    // Load Dashboard Data
+    await Promise.all([
+      fetchStats(),
+      fetchConfig(),
+      fetchCategories(),
+      fetchMenu(),
+      fetchCoupons(),
+      fetchOrders(),
+      fetchReservations()
+    ]);
+    switchTab('menu');
+
+  } catch (err) {
+    if (errorBox) {
+      errorBox.textContent = 'Network connection error. Please try again.';
+      errorBox.classList.remove('hidden');
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In to Dashboard';
+    }
+  }
+}
+
+// Handle Admin Logout
+async function handleAdminLogout() {
+  try {
+    const token = localStorage.getItem('xyz_token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    await fetch(`${API_BASE}/auth/logout`, { method: 'POST', headers });
+  } catch (e) {
+    // Ignore error
+  }
+  localStorage.removeItem('xyz_token');
+  const loginScreen = document.getElementById('staff-login-screen');
+  const dashboardApp = document.getElementById('admin-dashboard-app');
+  if (loginScreen) loginScreen.classList.remove('hidden');
+  if (dashboardApp) dashboardApp.classList.add('hidden');
+  showAdminToast("Signed out from Staff Portal.", "info");
 }
 
 // Initial Data Load

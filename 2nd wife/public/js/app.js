@@ -1112,10 +1112,6 @@ async function handleLoginSubmit(e) {
     renderUserNav();
     closeAuthModal();
     showToast(`Welcome back, ${data.user.name}! 👋`);
-
-    if (data.user.role === 'admin') {
-      showToast(`Admin privileges detected. You can access the Admin Dashboard!`, 'info');
-    }
   } catch (err) {
     showToast("Network error during login", "error");
   }
